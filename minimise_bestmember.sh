@@ -47,3 +47,13 @@ cp ${SCRIPTS_DIR}/repeat_min .
 sed -i s/NAME/"${NAME}_wat"/g repeat_min
 num_repeats=5
 ./repeat_min $(($num_repeats -1 )) #Andre's repeat scripts all use a gt comparison
+ambpdb -p ${NAME}_wat.prmtop < min${num_repeats}.restrt > ${NAME}_bestmember_minimised.pdb
+cp ${SCRIPTS_DIR}/trajin_strip_solvation.in .
+sed -i s/SOLVATEDFILE/"${NAME}_bestmember_minimised"/g trajin_strip_solvation.in
+sed -i s/STRIPPEDFILE/"${NAME}_bestmember_minimised_stripped"/g trajin_strip_solvation.in
+cpptraj ${NAME}_wat.prmtop < trajin_strip_solvation.in
+FMO_facio_input_conversion.sh ${NAME}_bestmember_minimised_stripped.mol2
+crashley=`echo $crashley`
+PDB_DIR=${crashley}/facio_files/minimised_bestmember_pdbs
+cp ${NAME}_bestmember_minimised_stripped_facio_ready.pdb $PDB_DIR
+#should append a label onto my minimised pdbs to say how many cycles they have been minimised for. 

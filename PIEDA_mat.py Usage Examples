@@ -1,0 +1,40 @@
+These short rules should be supplied to PIEDA_mat.py as the 1st argument, and are run via 'exec' in PIEDA_mat.py
+
+Find C3NC3 linker-guanine interactions:
+for complex in complexes_list:
+ if complex['ligand'] == 'C3NC3':
+ for fragment_a in complex['fragments']:
+ if fragment_a.frag_type == 'LNK':
+ frag_a = fragment_a
+ for fragment_b in complex['fragments']:
+ if fragment_b.frag_type == 'G':
+ frag_b = fragment_b
+ print_IFIE(frag_a, frag_b,
+'Ees+Eex+Edisp+Ect+Gsol', complexes_list)
+
+Find base-base stacking interactions in base-pair steps adjacent to chromophores:
+for complex in complexes_list:
+ for fragment in complex['fragments']:
+ if fragment.frag_type == 'CR1':
+ #Get the two adjacent and on the outside of CR1
+ print_IFIE(fragment.stacked_prev_leading,
+fragment.stacked_prev_leading.stacked_prev, 'Etot', complexes_list)
+ print_IFIE(fragment.stacked_next_lagging.stacked_next,
+fragment.stacked_next_lagging, 'Etot', complexes_list)
+ if fragment.frag_type == 'CR2':
+ print_IFIE(fragment.stacked_next_leading,
+fragment.stacked_next_leading.stacked_next, 'Etot', complexes_list)
+ print_IFIE(fragment.stacked_prev_lagging.stacked_prev,
+fragment.stacked_prev_lagging, 'Etot', complexes_list)
+
+Find 9aa chromophore-chromophore interactions:
+for complex in complexes_list:
+ if complex['ligand'] == '9aa':
+ for fragment_a in complex['fragments']:
+ if fragment_a.frag_type == 'CR1':
+ frag_a = fragment_a
+ for fragment_b in complex['fragments']:
+ if fragment_b.frag_type == 'CR2':
+ frag_b = fragment_b
+ print_IFIE(frag_a, frag_b,
+'Ees+Eex+Edisp+Ect+Gsol', complexes_list)
